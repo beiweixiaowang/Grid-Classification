@@ -61,8 +61,8 @@ seed_torch(seed=CFG.seed)
 
 
 # print(weight)
-train = pd.read_csv('input/data/original_data/train.csv')
-test = pd.read_csv('input/data/original_data/testa_nolabel.csv')
+train = pd.read_csv('input/data/train.csv')
+test = pd.read_csv('input/data/testa_nolabel.csv')
 train.fillna('', inplace=True)
 test.fillna('', inplace=True)
 train['text'] = train.apply(lambda row: concat_text(row), axis=1)
