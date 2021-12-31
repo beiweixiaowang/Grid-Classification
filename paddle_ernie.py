@@ -15,7 +15,6 @@ from paddlenlp.datasets import MapDataset
 from paddlenlp.transformers import LinearDecayWithWarmup
 from sklearn.model_selection import StratifiedKFold
 from tqdm import tqdm
-from collections import Iterable
 
 
 # =============================== 初始化 ========================
@@ -229,6 +228,7 @@ def predict(model, data, tokenizer, batch_size=1):
 
 
 def inference():
+    output_path = "./output/ernie/"
     model_paths = [
         'ernie-gram-zh_fold0.bin',
         'ernie-gram-zh_fold1.bin',
@@ -236,13 +236,13 @@ def inference():
         'ernie-gram-zh_fold3.bin',
         'ernie-gram-zh_fold4.bin',
     ]
-    # model = ppnlp.transformers.ErnieForSequenceClassification.from_pretrained(CFG.model_name,
-    #                                                                           num_classes=25)
+
     model = ppnlp.transformers.ErnieGramForSequenceClassification.from_pretrained(CFG.model_name,
                                                                                   num_classes=25)
     fold_preds = []
     for model_path in model_paths:
-        model.load_dict(P.load(model_path))
+        model.load_dict(P.load(os.path.join(output_path, model_path)))
+
         pred = predict(model, test.to_dict(orient='records'), tokenizer, 16)
 
         fold_preds.append(pred)
@@ -324,7 +324,7 @@ def train():
             acc = evaluate(model, criterion, metric, dev_data_loader)
             if acc > best_val_acc:
                 best_val_acc = acc
-                P.save(model.state_dict(), f'{CFG.model_name}_fold{fold}.bin')
+                P.save(model.state_dict(), f'./output/ernie/{CFG.model_name}_fold{fold}.bin')
             print('Best Val acc %.5f' % best_val_acc)
         del model
 
