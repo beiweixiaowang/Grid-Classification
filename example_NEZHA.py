@@ -19,7 +19,7 @@ torch.manual_seed(seed)
 
 if __name__ == '__main__':
     # tokenizer = AutoTokenizer.from_pretrained("hfl/chinese-roberta-wwm-ext")
-    tokenizer = BertTokenizer.from_pretrained(pretrained_model_name_or_path='NEZHA/nezha-base-wwm', do_lower_case=True)
+    tokenizer = BertTokenizer.from_pretrained(pretrained_model_name_or_path='./input/nezha-base-www', do_lower_case=True)
 
     data = []
     with open('data.txt', 'r', encoding='utf-8') as f:
@@ -45,12 +45,12 @@ if __name__ == '__main__':
     train_dataset = TensorDataset(input_ids_train, token_type_ids_train, attention_mask_train, label_train)
     test_dataset = TensorDataset(input_ids_test, token_type_ids_test, attention_mask_test, label_test)
 
-    train_loader = DataLoader(dataset=train_dataset, batch_size=8, shuffle=True)
-    test_loader = DataLoader(dataset=test_dataset, batch_size=8, shuffle=False)
+    train_loader = DataLoader(dataset=train_dataset, batch_size=2, shuffle=True)
+    test_loader = DataLoader(dataset=test_dataset, batch_size=2, shuffle=False)
 
-    Bert_config = BertConfig.from_json_file('NEZHA/nezha-base-wwm/bert_config.json')
+    Bert_config = BertConfig.from_json_file('./input/nezha-base-www/config.json')
     model = BertForSequenceClassification(config=Bert_config, num_labels=2)
-    nezha_utils.torch_init_model(model, 'NEZHA/nezha-base-wwm/pytorch_model.bin')
+    nezha_utils.torch_init_model(model, './input/nezha-base-www/pytorch_model.bin')
 
     # model = AutoModelForSequenceClassification.from_pretrained("hfl/chinese-roberta-wwm-ext")
     model.to(device)
